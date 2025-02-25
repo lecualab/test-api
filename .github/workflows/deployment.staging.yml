@@ -1,0 +1,23 @@
+name: '[Staging] Deployment'
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - README.md
+    branches:
+      - main
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  deployment:
+    name: Deployment
+    uses: lecualab/workflows/.github/workflows/serverless.deployment.yml@main
+    secrets: inherit
+    with:
+      stage: staging
+      serverless_file_path: serverless/serverless.staging.yaml
+      fetch_env_vars: false
